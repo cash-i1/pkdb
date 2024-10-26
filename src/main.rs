@@ -21,7 +21,7 @@ struct Card {
 fn main() {
     let mut cards: Vec<Card> = vec![];
 
-    let cards_yaml = fs::read_dir("./data/cards").unwrap();
+    let cards_yaml = fs::read_dir("./site/data/cards").unwrap();
     for card in cards_yaml {
         if let Ok(card) = card {
             let contents = fs::read_to_string(card.path()).unwrap();
@@ -35,7 +35,7 @@ fn main() {
         }
     }
 
-    let images = fs::read_dir("./data/img").unwrap();
+    let images = fs::read_dir("./site/data/img").unwrap();
     for image in images {
         if let Ok(image) = image {
             let path = image.path();
@@ -69,6 +69,6 @@ fn main() {
         }
     );
 
-    fs::write("./index.html", html.clone().into_string()).unwrap();
+    fs::write("./site/index.html", html.clone().into_string()).unwrap();
 
 }
