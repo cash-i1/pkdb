@@ -3,12 +3,18 @@ use std::fs;
 use yaml_rust2::{YamlEmitter, YamlLoader};
 
 #[derive(Debug)]
-struct ImageName(String);
+// extention agnostic image name
+struct ImageLocator(String);
+
+// path of image relative to "/"
+#[derive(Debug)]
+struct ImagePath(String);
 
 #[derive(Debug)]
 struct Card {
     name: String,
-    img: ImageName,
+    image_locator: ImageLocator,
+    image_path: Option<ImagePath>,
 }
 
 fn main() {
@@ -22,13 +28,34 @@ fn main() {
 
             cards.push(Card {
                 name: yaml["name"].as_str().unwrap().to_string(),
-                img: ImageName(yaml["img"].as_str().unwrap().to_string()),
+                image_locator: ImageLocator(yaml["img"].as_str().unwrap().to_string()),
+                image_path: None,
             });
         }
     }
-    
+
+    let images = fs::read_dir("./data/img").unwrap();
+    for image in images {
+        if let Ok(image) = image {
+            let path = image.path();
+            let path = path.strip_prefix(".").unwrap();
+
+            for card in &mut cards {
+                let path_name = path
+                    .with_extension("")
+                    .file_name()
+                    .unwrap()
+                    .to_string_lossy()
+                    .to_string();
+
+                if path_name == card.image_locator.0 {
+                    card.image_path = Some(ImagePath(path.to_string_lossy().to_string()))
+                }
+            }
+        }
+    }
+
     for card in cards {
         println!("{:?}", card);
     }
-
 }
