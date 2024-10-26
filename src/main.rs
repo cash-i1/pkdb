@@ -1,5 +1,6 @@
 use std::fs;
 
+use maud::html;
 use yaml_rust2::{YamlEmitter, YamlLoader};
 
 #[derive(Debug)]
@@ -54,6 +55,23 @@ fn main() {
             }
         }
     }
+
+    let html = html!(
+        h1 { "pokemons" }
+        hr {}
+        @for card in &cards {
+            div class="card" {
+                h2 { (card.name) }
+                @if let Some(image_path) = &card.image_path {
+                    img src=(image_path.0) {}
+                }
+            }
+        }
+    );
+
+    fs::write("./index.html", html.clone().into_string()).unwrap();
+
+    println!("{:?}", html.into_string());
 
     for card in cards {
         println!("{:?}", card);
