@@ -71,9 +71,4 @@ fn main() {
 
     fs::write("./index.html", html.clone().into_string()).unwrap();
 
-    println!("{:?}", html.into_string());
-
-    for card in cards {
-        println!("{:?}", card);
-    }
 }
