@@ -24,8 +24,8 @@ jobs:
       - name: Run Rust project
         run: cargo run
 
-      - name: Upload index.html to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./
